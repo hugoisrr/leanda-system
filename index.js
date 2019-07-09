@@ -9,10 +9,16 @@ const swagger = require('./config/swagger')
 // Register Swagger
 fastify.register(require('fastify-swagger'), swagger.options)
 
-// Connect to DB
-mongoose.connect('mongodb://localhost/leanda')
- .then(() => console.log('MongoDB connected…'))
- .catch(err => console.log(err))
+ //db connection
+// mongoose.connect('mongodb://localhost:27017/multivac', function (err){
+  mongoose.connect('mongodb://root:zmxJENMUS8VN@localhost:27018', function (err){
+    mongoose.Promise = global.Promise;
+    if(err){
+        console.log("not connected to mongodb: " +err);
+    } else {
+        console.log("connected to mongodb")
+    }
+});
   
 routes.forEach((route, index) => {
     fastify.route(route)
