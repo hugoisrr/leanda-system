@@ -11,7 +11,7 @@ fastify.register(require('fastify-swagger'), swagger.options)
 
  //db connection
 // mongoose.connect('mongodb://localhost:27017/multivac', function (err){
-  mongoose.connect('mongodb://root:hNia4rvqYXmX@127.0.0.1:27017/leanda', { useNewUrlParser: true }, function (err){
+  mongoose.connect('mongodb://root:hNia4rvqYXmX@127.0.0.1:27017', { useNewUrlParser: true }, function (err){
     mongoose.Promise = global.Promise;
     if(err){
         console.log("not connected to mongodb: " +err);
