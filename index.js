@@ -17,10 +17,12 @@ fastify.register(require('fastify-swagger'), swagger.options)
         console.log("not connected to mongodb: " +err);
     } else {
         console.log("connected to mongodb")
+
     }
 });
   
 routes.forEach((route, index) => {
+    console.log("i get a request");
     fastify.route(route)
 })
 
@@ -36,6 +38,7 @@ routes.forEach((route, index) => {
         fastify.swagger()
         fastify.log.info(`listening on ${fastify.server.address().port}`)
     } catch (err) {
+      console.log("api err");
       fastify.log.error(err)
       process.exit(1)
     }

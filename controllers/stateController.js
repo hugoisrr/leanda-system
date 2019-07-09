@@ -8,8 +8,10 @@ const State = require('../models/state')
 exports.getStates = async (req, reply) => {
     try {
       const state = await State.find();
+      console.log("try");
       return state
     } catch (err) {
+      console.log("catch");
       throw boom.boomify(err)
     }
   }
