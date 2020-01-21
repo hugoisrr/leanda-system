@@ -1,0 +1,20 @@
+{
+  "name": "leanda-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"tsc -w\" \"nodemon dist/index.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.cc-asp.fraunhofer.de:sensorkoffer/leanda-backend.git"
+  },
+  "keywords": [],
+  "author": "Hugo I. Ramirez",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^5.0.2",
+    "typescript": "^3.7.5"
+  }
+}
