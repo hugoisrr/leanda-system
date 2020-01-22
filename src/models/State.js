@@ -3,39 +3,28 @@ import slug from 'mongoose-url-slugs';
 
 mongoose.plugin(slug);
 
-const workStationSchema = new Schema(
+const stateSchema = new Schema(
   {
     name: {
       type: String,
       unique: true,
       required: true,
       trim: true,
-      min: 4
+      min: 3
     },
     slug: {
       type: String,
       slug: 'name',
       required: true
     },
-    workStationType: {
-      type: String,
-      enum: ['TF', 'HT'],
-      default: 'TF'
-    },
     inUse: {
       type: Boolean,
-      required: true,
-      default: false
+      default: true
     },
-    locked: {
-      type: Boolean,
-      required: true,
-      default: false
-    },
-    shifts: [
+    workstations: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Shift'
+        ref: 'WorkStation'
       }
     ]
   },
@@ -44,4 +33,4 @@ const workStationSchema = new Schema(
   }
 );
 
-export default model('WorkStation', workStationSchema);
+export default model('State', stateSchema);
