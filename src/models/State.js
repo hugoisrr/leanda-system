@@ -16,16 +16,20 @@ const stateSchema = new Schema(
       type: String,
       slug: 'name'
     },
-    inUse: {
+    locked: {
       type: Boolean,
-      default: true
+      default: false
     },
     workstations: [
       {
         type: Schema.Types.ObjectId,
         ref: 'WorkStation'
       }
-    ]
+    ],
+    stateGroup: {
+      type: Schema.Types.ObjectId,
+      ref: 'StateGroup'
+    }
   },
   {
     timestamps: true

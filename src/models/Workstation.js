@@ -31,6 +31,16 @@ const workStationSchema = new Schema(
       required: true,
       default: false
     },
+    states: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'State'
+      }
+    ],
+    workStationGroup: {
+      type: Schema.Types.ObjectId,
+      ref: 'WorkStationGroup'
+    },
     shifts: [
       {
         type: Schema.Types.ObjectId,
@@ -42,5 +52,7 @@ const workStationSchema = new Schema(
     timestamps: true
   }
 );
+
+// TODO create live state with virtual method
 
 export default model('WorkStation', workStationSchema);
