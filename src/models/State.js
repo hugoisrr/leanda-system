@@ -1,5 +1,5 @@
 import mongoose, { Schema, model } from 'mongoose';
-import slug from 'mongoose-url-slugs';
+import slug from 'mongoose-slug-generator';
 
 mongoose.plugin(slug);
 
@@ -14,8 +14,7 @@ const stateSchema = new Schema(
     },
     slug: {
       type: String,
-      slug: 'name',
-      required: true
+      slug: 'name'
     },
     inUse: {
       type: Boolean,
