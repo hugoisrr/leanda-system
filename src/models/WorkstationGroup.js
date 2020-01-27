@@ -8,9 +8,16 @@ const wkGroupSchema = new Schema(
     name: {
       type: String,
       unique: true,
-      required: true,
+      required: [true, 'Name is required'],
       trim: true,
       min: 3
+    },
+    wkSGroupNum: {
+      type: String,
+      unique: true,
+      required: true,
+      trim: true,
+      min: 2
     },
     slug: {
       type: String,

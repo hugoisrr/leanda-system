@@ -8,7 +8,7 @@ const workStationSchema = new Schema(
     name: {
       type: String,
       unique: true,
-      required: true,
+      required: [true, 'Name is required'],
       trim: true,
       min: 4
     },

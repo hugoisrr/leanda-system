@@ -4,6 +4,7 @@ import path from 'path';
 import cors from 'cors';
 
 import pictureRoutes from './routes/picture';
+import wkGroupRoutes from './routes/wkgroup';
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(json());
 
 // Routes
 app.use('/api', pictureRoutes);
+app.use('/api/wsgroup', wkGroupRoutes);
 
 // Store public files
 app.use('/uploads', express.static(path.resolve('uploads')));
