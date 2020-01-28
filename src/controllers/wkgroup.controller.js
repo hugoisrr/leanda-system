@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable import/prefer-default-export */
 import { validationResult } from 'express-validator';
+import slugify from 'slugify';
 import WorkStationGroup from '../models/WorkstationGroup';
 
 export async function createWorkStationGroup(req, res) {
@@ -9,14 +10,17 @@ export async function createWorkStationGroup(req, res) {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
+  const { name, kostenstelle } = req.body;
+
+  const wkSGroupExists = await WorkStationGroup.findOne({ name });
+  if (wkSGroupExists)
+    return res.status(400).json({ message: 'Workstation Group exists.' });
 
   // Saving a new WorkStationGroup
-  const { name, wkSGroupNum } = req.body;
-
   try {
     const newWSGroup = new WorkStationGroup({
       name,
-      wkSGroupNum
+      kostenstelle
     });
 
     const wsGroup = await newWSGroup.save();
@@ -26,12 +30,73 @@ export async function createWorkStationGroup(req, res) {
       wsGroup
     });
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      // console.error('Error Validating!', err);
-      res.status(422).json(err);
-    } else {
-      console.error(err);
-      res.status(500).json(err);
+    if (err.name === 'MongoError') {
+      console.error(err.message);
+      return res.status(400).json({ message: 'Kostenstelle exists.' });
     }
+    console.error(err);
+    return res.status(500).json(err);
   }
 }
+
+export async function showListWorkStationGroups(req, res) {
+  try {
+    const wkSGroups = await WorkStationGroup.find().sort({ createdAt: -1 });
+    return res.json(wkSGroups);
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).send('Server Error');
+  }
+}
+
+export async function showWorkStationByID(req, res) {
+  try {
+    const wkSGroup = await WorkStationGroup.findById(req.params.id);
+    if (!wkSGroup) {
+      return res.status(404).json({ message: 'WorkStationGroup not found' });
+    }
+
+    return res.json(wkSGroup);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'WorkStationGroup not found' });
+    }
+    return res.status(500).send('Server Error');
+  }
+}
+
+export async function editWorkStationGroup(req, res) {
+  const { name, kostenstelle } = req.body;
+
+  // Build WorkStationGroup object
+  const wkSGroupFields = {};
+  if (name) wkSGroupFields.name = name;
+  if (kostenstelle) wkSGroupFields.kostenstelle = kostenstelle;
+  wkSGroupFields.slug = slugify(name.toLowerCase());
+
+  try {
+    let wkSGroup = await WorkStationGroup.findById(req.params.id);
+
+    if (!wkSGroup)
+      return res.status(404).json({ message: 'WorkStationGroup not found' });
+
+    wkSGroup = await WorkStationGroup.findByIdAndUpdate(
+      req.params.id,
+      { $set: wkSGroupFields },
+      { new: true }
+    );
+
+    return res.json(wkSGroup);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'WorkStationGroup not found' });
+    }
+    res.status(500).send('Server Error');
+  }
+}
+
+// TODO add a Workstation to a WorkstationGroup
+
+// TODO remove and eliminate a WorkstationGroup if empty

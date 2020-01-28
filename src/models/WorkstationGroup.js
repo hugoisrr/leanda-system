@@ -8,11 +8,11 @@ const wkGroupSchema = new Schema(
     name: {
       type: String,
       unique: true,
-      required: [true, 'Name is required'],
+      required: true,
       trim: true,
       min: 3
     },
-    wkSGroupNum: {
+    kostenstelle: {
       type: String,
       unique: true,
       required: true,
