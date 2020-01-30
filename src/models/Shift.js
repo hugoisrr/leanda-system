@@ -1,12 +1,12 @@
+/* eslint-disable func-names */
 import { Schema, model } from 'mongoose';
 
 const shiftSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-      min: 3
+    shiftType: {
+      type: [String],
+      enum: ['FS', 'SS', 'NS'],
+      required: true
     },
     startTime: {
       type: Date,
@@ -16,14 +16,14 @@ const shiftSchema = new Schema(
       type: Date,
       required: true
     },
-    daysOfWeek: {
-      type: [Number],
-      enum: [0, 1, 2, 3, 4, 5, 6],
-      required: true
-    },
     workStation: {
       type: Schema.Types.ObjectId,
       ref: 'WorkStation',
+      required: true
+    },
+    daysOfWeek: {
+      type: [Number],
+      enum: [0, 1, 2, 3, 4, 5, 6],
       required: true
     }
   },
@@ -32,7 +32,11 @@ const shiftSchema = new Schema(
   }
 );
 
-// TODO create virtual function to get duration Time
 // TODO create getter function to get only time from startTime and stopTime
+
+shiftSchema.virtual('durationMin').get(function() {
+  const diff = Math.abs(this.stopTime - this.startTime);
+  return Math.floor(diff / 1000 / 60);
+});
 
 export default model('Shift', shiftSchema);

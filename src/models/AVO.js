@@ -10,7 +10,12 @@ const AVOSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'FAUF'
     },
-    // TODO add list of references of Sequences
+    sequences: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Sequence'
+      }
+    ],
     workstation: {
       type: Schema.Types.ObjectId,
       ref: 'WorkStation'

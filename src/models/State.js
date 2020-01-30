@@ -1,7 +1,4 @@
-import mongoose, { Schema, model } from 'mongoose';
-import slug from 'mongoose-slug-generator';
-
-mongoose.plugin(slug);
+import { Schema, model } from 'mongoose';
 
 const stateSchema = new Schema(
   {
@@ -12,24 +9,20 @@ const stateSchema = new Schema(
       trim: true,
       min: 3
     },
-    slug: {
-      type: String,
-      slug: 'name'
-    },
-    locked: {
+    inUse: {
       type: Boolean,
-      default: false
+      default: true
+    },
+    stateGroup: {
+      type: Schema.Types.ObjectId,
+      ref: 'StateGroup'
     },
     workstations: [
       {
         type: Schema.Types.ObjectId,
         ref: 'WorkStation'
       }
-    ],
-    stateGroup: {
-      type: Schema.Types.ObjectId,
-      ref: 'StateGroup'
-    }
+    ]
   },
   {
     timestamps: true

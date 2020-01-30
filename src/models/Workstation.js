@@ -25,7 +25,7 @@ const workStationSchema = new Schema(
     workStationType: {
       type: String,
       enum: ['TF', 'HT'],
-      default: 'TF'
+      required: true
     },
     inUse: {
       type: Boolean,
