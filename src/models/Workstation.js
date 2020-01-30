@@ -8,9 +8,15 @@ const workStationSchema = new Schema(
     name: {
       type: String,
       unique: true,
-      required: [true, 'Name is required'],
+      required: true,
       trim: true,
       min: 4
+    },
+    WSnum: {
+      type: String,
+      unique: true,
+      required: true,
+      min: 2
     },
     slug: {
       type: String,
@@ -23,14 +29,24 @@ const workStationSchema = new Schema(
     },
     inUse: {
       type: Boolean,
-      required: true,
-      default: false
+      default: true
     },
-    locked: {
+    unlocked: {
       type: Boolean,
-      required: true,
-      default: false
+      default: true
     },
+    shifts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Shift'
+      }
+    ],
+    AVOs: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'AVO'
+      }
+    ],
     states: [
       {
         type: Schema.Types.ObjectId,
@@ -41,12 +57,10 @@ const workStationSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'WorkStationGroup'
     },
-    shifts: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Shift'
-      }
-    ]
+    picture: {
+      type: Schema.Types.ObjectId,
+      ref: 'Picture'
+    }
   },
   {
     timestamps: true
