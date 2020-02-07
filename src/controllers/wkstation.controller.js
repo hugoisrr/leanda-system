@@ -66,6 +66,10 @@ export async function showWorkStationByID(req, res) {
 export async function editWorkStationByID(req, res) {
   const { name, WSnum, type, inUse, locked } = req.body;
 
+  let wkStation = await WorkStation.findById(req.params.id);
+  if (!wkStation)
+    return res.status(404).json({ message: 'WorkStation not found' });
+
   // Build WorkStation object
   const wkStationFields = {};
   if (name) {
@@ -74,15 +78,18 @@ export async function editWorkStationByID(req, res) {
   }
   if (WSnum) wkStationFields.WSnum = WSnum;
   if (type) wkStationFields.type = type;
-  if (!inUse || inUse) wkStationFields.inUse = inUse;
-  if (!locked || locked) wkStationFields.locked = locked;
+  if (inUse === undefined) {
+    wkStationFields.inUse = wkStation.inUse;
+  } else if (inUse || !inUse) {
+    wkStationFields.inUse = inUse;
+  }
+  if (locked === undefined) {
+    wkStationFields.locked = wkStation.locked;
+  } else if (locked || !locked) {
+    wkStationFields.locked = locked;
+  }
 
   try {
-    let wkStation = await WorkStation.findById(req.params.id);
-
-    if (!wkStation)
-      return res.status(404).json({ message: 'WorkStation not found' });
-
     wkStation = await WorkStation.findByIdAndUpdate(
       req.params.id,
       { $set: wkStationFields },
