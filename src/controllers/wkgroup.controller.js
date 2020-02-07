@@ -71,9 +71,11 @@ export async function editWorkStationGroup(req, res) {
 
   // Build WorkStationGroup object
   const wkSGroupFields = {};
-  if (name) wkSGroupFields.name = name;
+  if (name) {
+    wkSGroupFields.name = name;
+    wkSGroupFields.slug = slugify(name.toLowerCase());
+  }
   if (kostenstelle) wkSGroupFields.kostenstelle = kostenstelle;
-  wkSGroupFields.slug = slugify(name.toLowerCase());
 
   try {
     let wkSGroup = await WorkStationGroup.findById(req.params.id);
@@ -97,6 +99,6 @@ export async function editWorkStationGroup(req, res) {
   }
 }
 
-// TODO add a Workstation to a WorkstationGroup
+// TODO add a Workstation to a WorkstationGroup and reference of WorkstationGroup to a WorkStation
 
-// TODO remove and eliminate a WorkstationGroup if empty
+// TODO move a WorkStation to another WorkstationGroup; remove and eliminate a WorkstationGroup if empty

@@ -5,6 +5,7 @@ import cors from 'cors';
 
 import pictureRoutes from './routes/picture';
 import wkGroupRoutes from './routes/wkgroup';
+import wkstation from './routes/wkstation';
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(json());
 // Routes
 app.use('/api', pictureRoutes);
 app.use('/api', wkGroupRoutes);
+app.use('/api', wkstation);
 // TODO WorkStation Routes
 
 // Store public files

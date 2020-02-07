@@ -17,6 +17,10 @@ const stateSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'StateGroup'
     },
+    colorHex: {
+      type: String,
+      default: '#6200EE'
+    },
     workstations: [
       {
         type: Schema.Types.ObjectId,

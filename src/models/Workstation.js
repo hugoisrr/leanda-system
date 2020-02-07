@@ -22,18 +22,18 @@ const workStationSchema = new Schema(
       type: String,
       slug: 'name'
     },
-    workStationType: {
+    type: {
       type: String,
       enum: ['TF', 'HT'],
       required: true
     },
     inUse: {
       type: Boolean,
-      default: true
+      default: false
     },
-    unlocked: {
+    locked: {
       type: Boolean,
-      default: true
+      default: false
     },
     shifts: [
       {

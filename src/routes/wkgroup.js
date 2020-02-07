@@ -14,7 +14,7 @@ router
   .post(
     '/wsgroups',
     [
-      check('name', 'Please add name')
+      check('name', 'Please add a name')
         .not()
         .isEmpty(),
       check('kostenstelle', 'Please add a WorkStationGroup number')

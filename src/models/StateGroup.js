@@ -16,6 +16,10 @@ const stateGroupSchema = new Schema(
       type: String,
       slug: 'name'
     },
+    colorHex: {
+      type: String,
+      default: '#6200EE'
+    },
     states: [
       {
         type: Schema.Types.ObjectId,
