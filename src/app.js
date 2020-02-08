@@ -22,7 +22,7 @@ app.use(json());
 app.use('/api', pictureRoutes);
 app.use('/api', wkGroupRoutes);
 app.use('/api', wkstation);
-// TODO WorkStation Routes
+// TODO Shift Routes
 
 // Store public files
 app.use('/uploads', express.static(path.resolve('uploads')));
