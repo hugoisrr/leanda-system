@@ -1,4 +1,5 @@
 /* eslint-disable import/prefer-default-export */
+import { validationResult } from 'express-validator';
 import fs from 'fs-extra';
 import path from 'path';
 
@@ -15,40 +16,80 @@ export async function getPictures(req, res) {
 }
 
 export async function createPicture(req, res) {
+  // Validation
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    return res.status(400).json({ errors: errors.array() });
+
   const { title, description } = req.body;
-  const newPicture = { title, description, imagePath: req.file.path };
-  const picture = new Picture(newPicture);
-  await picture.save();
-  return res.json({
-    message: 'Picture successfully saved',
-    picture
-  });
-}
 
-export async function getPicture(req, res) {
-  const { id } = req.params;
-  const picture = await Picture.findById(id);
-  return res.json(picture);
-}
+  // Verifies if title exists
+  const picExists = await Picture.findOne({ title });
+  if (picExists) return res.status(400).json({ message: 'Title exits' });
 
-export async function deletePicture(req, res) {
-  const { id } = req.params;
-  const picture = await Picture.findByIdAndRemove(id);
-  if (picture) {
-    await fs.unlink(path.resolve(picture.imagePath));
+  // Saving Picture
+  try {
+    const newPicture = { title, description, imagePath: req.file.path };
+    const picture = new Picture(newPicture);
+    await picture.save();
+    return res.json({
+      message: 'Picture successfully saved',
+      picture
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json(err);
   }
-  return res.json({ message: 'Picture Deleted' });
 }
 
-export async function updatePicture(req, res) {
-  const { id } = req.params;
-  const { title, description } = req.body;
-  const updatedPicture = await Picture.findByIdAndUpdate(id, {
-    title,
-    description
-  });
-  return res.json({
-    message: 'Successfully updated',
-    updatedPicture
-  });
+export async function getPictureByID(req, res) {
+  try {
+    const picture = await Picture.findById(req.params.id);
+    if (!picture) return res.status(404).json({ message: 'Picture not found' });
+
+    return res.json(picture);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'Picture not found' });
+    }
+    return res.status(500).send('Server Error');
+  }
+}
+
+export async function deletePictureByID(req, res) {
+  try {
+    const picture = await Picture.findByIdAndRemove(req.params.id);
+    if (picture) {
+      await fs.unlink(path.resolve(picture.imagePath));
+    }
+    return res.json({ message: 'Picture Deleted' });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'Picture not found' });
+    }
+    return res.status(500).send('Server Error');
+  }
+}
+
+export async function editPictureByID(req, res) {
+  try {
+    const { id } = req.params;
+    const { title, description } = req.body;
+    const updatedPicture = await Picture.findByIdAndUpdate(id, {
+      title,
+      description
+    });
+    return res.json({
+      message: 'Successfully updated',
+      updatedPicture
+    });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'Picture not found' });
+    }
+    return res.status(500).send('Server Error');
+  }
 }

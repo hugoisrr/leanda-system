@@ -4,15 +4,15 @@ import { check } from 'express-validator';
 import {
   createWorkStationGroup,
   showListWorkStationGroups,
-  showWorkStationByID,
-  editWorkStationGroup
+  showWorkStationGroupByID,
+  editWorkStationGroupByID
 } from '../controllers/wkgroup.controller';
 
 const router = Router();
 
 router
+  .route('/wsgroups')
   .post(
-    '/wsgroups',
     [
       check('name', 'Please add a name')
         .not()
@@ -23,8 +23,11 @@ router
     ],
     createWorkStationGroup
   )
-  .get('/wsgroups', showListWorkStationGroups)
-  .get('/wsgroups/:id', showWorkStationByID)
-  .put('/wsgroups/:id', editWorkStationGroup);
+  .get(showListWorkStationGroups);
+
+router
+  .route('/wsgroups/:id')
+  .get(showWorkStationGroupByID)
+  .put(editWorkStationGroupByID);
 
 export default router;

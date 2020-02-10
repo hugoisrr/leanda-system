@@ -3,6 +3,8 @@
 import { validationResult } from 'express-validator';
 import slugify from 'slugify';
 import WorkStation from '../models/Workstation';
+import WorkstationGroup from '../models/WorkstationGroup';
+import Picture from '../models/Picture';
 
 export async function createWorkStation(req, res) {
   // Validation
@@ -15,7 +17,7 @@ export async function createWorkStation(req, res) {
 
   const wkSExists = await WorkStation.findOne({ name });
   if (wkSExists)
-    return res.status(400).json({ meesage: 'Workstation exists.' });
+    return res.status(400).json({ message: 'Workstation exists.' });
 
   // Saving a new WorkStation
   try {
@@ -64,7 +66,15 @@ export async function showWorkStationByID(req, res) {
 }
 
 export async function editWorkStationByID(req, res) {
-  const { name, WSnum, type, inUse, locked } = req.body;
+  const {
+    name,
+    WSnum,
+    type,
+    inUse,
+    locked,
+    workStationGroup,
+    picture
+  } = req.body;
 
   let wkStation = await WorkStation.findById(req.params.id);
   if (!wkStation)
@@ -87,6 +97,22 @@ export async function editWorkStationByID(req, res) {
     wkStationFields.locked = wkStation.locked;
   } else if (locked || !locked) {
     wkStationFields.locked = locked;
+  }
+  // NOTE Relationship between WorkStation and WorkStation Group
+  if (workStationGroup) {
+    const wkGroupFound = await WorkstationGroup.findById(workStationGroup);
+    if (!wkGroupFound)
+      return res.status(404).json({ message: 'WorkStation Group not Found' });
+    wkStationFields.workStationGroup = wkGroupFound.id;
+    wkGroupFound.workstations.unshift(wkStation.id);
+    // TODO before saving verify if the workstation is not saved in another group
+    await wkGroupFound.save();
+  }
+  if (picture) {
+    const pictureFound = await Picture.findById(picture);
+    if (!pictureFound)
+      return res.status(404).json({ message: 'Picture not found' });
+    wkStationFields.picture = pictureFound.id;
   }
 
   try {
@@ -111,5 +137,3 @@ export async function editWorkStationByID(req, res) {
 // TODO add AVO to a WorkStation
 
 // TODO add state to a WorkStation
-
-// TODO add picture to a WorkStation

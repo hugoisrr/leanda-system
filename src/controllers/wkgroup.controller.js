@@ -26,7 +26,7 @@ export async function createWorkStationGroup(req, res) {
     const wsGroup = await newWSGroup.save();
 
     return res.status(200).json({
-      message: 'Group created',
+      message: 'WorkStation Group created',
       wsGroup
     });
   } catch (err) {
@@ -49,7 +49,7 @@ export async function showListWorkStationGroups(req, res) {
   }
 }
 
-export async function showWorkStationByID(req, res) {
+export async function showWorkStationGroupByID(req, res) {
   try {
     const wkSGroup = await WorkStationGroup.findById(req.params.id);
     if (!wkSGroup) {
@@ -66,8 +66,13 @@ export async function showWorkStationByID(req, res) {
   }
 }
 
-export async function editWorkStationGroup(req, res) {
+export async function editWorkStationGroupByID(req, res) {
   const { name, kostenstelle } = req.body;
+
+  let wkSGroup = await WorkStationGroup.findById(req.params.id);
+
+  if (!wkSGroup)
+    return res.status(404).json({ message: 'WorkStationGroup not found' });
 
   // Build WorkStationGroup object
   const wkSGroupFields = {};
@@ -78,11 +83,6 @@ export async function editWorkStationGroup(req, res) {
   if (kostenstelle) wkSGroupFields.kostenstelle = kostenstelle;
 
   try {
-    let wkSGroup = await WorkStationGroup.findById(req.params.id);
-
-    if (!wkSGroup)
-      return res.status(404).json({ message: 'WorkStationGroup not found' });
-
     wkSGroup = await WorkStationGroup.findByIdAndUpdate(
       req.params.id,
       { $set: wkSGroupFields },
@@ -98,7 +98,5 @@ export async function editWorkStationGroup(req, res) {
     res.status(500).send('Server Error');
   }
 }
-
-// TODO add a Workstation to a WorkstationGroup and reference of WorkstationGroup to a WorkStation
 
 // TODO move a WorkStation to another WorkstationGroup; remove and eliminate a WorkstationGroup if empty

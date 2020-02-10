@@ -11,8 +11,8 @@ import {
 const router = Router();
 
 router
+  .route('/wkstation')
   .post(
-    '/wkstation',
     [
       check('name', 'Please add a name')
         .not()
@@ -26,8 +26,11 @@ router
     ],
     createWorkStation
   )
-  .get('/wkstation', showListWorkStations)
-  .get('/wkstation/:id', showWorkStationByID)
-  .put('/wkstation/:id', editWorkStationByID);
+  .get(showListWorkStations);
+
+router
+  .route('/wkstation/:id')
+  .get(showWorkStationByID)
+  .put(editWorkStationByID);
 
 export default router;
