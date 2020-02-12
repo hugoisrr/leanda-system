@@ -5,7 +5,8 @@ import cors from 'cors';
 
 import pictureRoutes from './routes/picture';
 import wkGroupRoutes from './routes/wkgroup';
-import wkstation from './routes/wkstation';
+import wkstationRoutes from './routes/wkstation';
+import shiftRoutes from './routes/shift';
 
 const app = express();
 
@@ -21,8 +22,8 @@ app.use(json());
 // Routes
 app.use('/api', pictureRoutes);
 app.use('/api', wkGroupRoutes);
-app.use('/api', wkstation);
-// TODO Shift Routes
+app.use('/api', wkstationRoutes);
+app.use('/api', shiftRoutes);
 
 // Store public files
 app.use('/uploads', express.static(path.resolve('uploads')));

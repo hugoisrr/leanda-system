@@ -105,7 +105,6 @@ export async function editWorkStationByID(req, res) {
       return res.status(404).json({ message: 'WorkStation Group not Found' });
     wkStationFields.workStationGroup = wkGroupFound.id;
     wkGroupFound.workstations.unshift(wkStation.id);
-    // TODO before saving verify if the workstation is not saved in another group
     await wkGroupFound.save();
   }
   if (picture) {

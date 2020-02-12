@@ -14,15 +14,9 @@ router
   .route('/wkstation')
   .post(
     [
-      check('name', 'Please add a name')
-        .not()
-        .isEmpty(),
-      check('WSnum', 'Please add a Workstation number')
-        .not()
-        .isEmpty(),
-      check('type', 'Please select a type')
-        .not()
-        .isEmpty()
+      check('name', 'Please add a name').notEmpty(),
+      check('WSnum', 'Please add a Workstation number').notEmpty(),
+      check('type', 'Please select a type').notEmpty()
     ],
     createWorkStation
   )
